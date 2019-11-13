@@ -26,9 +26,9 @@ public class Usuario implements Serializable{
     private Date fechanacimiento;
     private byte[] foto;
     private String direccion;
-    private ArrayList celular;
-    private ArrayList telefonos;
-    private ArrayList otrasredes;
+    private ArrayList<Long> celular;
+    private ArrayList<Long> telefonos;
+    private ArrayList<String> otrasredes;
     private Date ulitmaconexion;
     private boolean estadoconexion;
     private String departamento;
@@ -50,6 +50,10 @@ public class Usuario implements Serializable{
         this.departamento = departamento;
         this.descripcion = descripcion;
         this.contrasena = contrasena;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 
     public int getIdUsuario() {
@@ -76,15 +80,15 @@ public class Usuario implements Serializable{
         return direccion;
     }
 
-    public ArrayList getCelular() {
+    public ArrayList<Long> getCelular() {
         return celular;
     }
 
-    public ArrayList getTelefonos() {
+    public ArrayList<Long> getTelefonos() {
         return telefonos;
     }
 
-    public ArrayList getOtrasredes() {
+    public ArrayList<String> getOtrasredes() {
         return otrasredes;
     }
 
@@ -107,6 +111,7 @@ public class Usuario implements Serializable{
     public String getContrasena() {
         return contrasena;
     }
+
     
     
 }

@@ -7,6 +7,7 @@
 package edu.cecar.controlador;
 
 import edu.cecar.componentes.ConectarMySQL;
+import edu.cecar.componentes.Utilidades;
 import edu.cecar.componentes.comunicaciones.ServerSocketObjeto;
 import edu.cecar.modelo.Archivo;
 import edu.cecar.modelo.Usuario;
@@ -43,12 +44,18 @@ public class ServidorRESOC {
         while (sw) {
 			
             try {
-
                 Object object = serverSocket.getEntrada().readObject();		
                 Archivo archivo = (Archivo)object;
-                System.out.println("Se Descargo Exitosamente el Archivo");                            
-                Usuario u = (Usuario) archivo.getObjecto();
-		              System.out.println("contenido "+u.getNombres());			
+                
+                if(archivo.getOperacionEnvio().equals("Subida")){
+                    System.out.println("!Se Recibio Petecion de Cliente!");
+                    System.out.println("contenido: "+((Usuario)archivo.getObjecto()).getIdUsuario() + " "+((Usuario)archivo.getObjecto()).getNombres()+" "+((Usuario)archivo.getObjecto()).getCelular().get(0)+" "+((Usuario)archivo.getObjecto()).getTelefonos().get(0));
+                    procesarSolicitud(archivo);
+                }else{
+                    
+                }
+                
+                
             } catch (IOException e) {		
                 System.out.println("Conexión Cerrada de Manera Inesperada. " + e); 
                 sw = false;
@@ -61,7 +68,20 @@ public class ServidorRESOC {
         }
     }
     
-    public static void main(String[] args){
+   
+    private void procesarSolicitud(Archivo archivoRecibido){
+        switch(archivoRecibido.getOperacionInterna()){
+            case 1: 
+                BD.agregarUsuario((Usuario)archivoRecibido.getObjecto());
+                System.out.println("Se Agrego Un Nuevo Usuario a RESOC!");
+                break;
+            case 2:
+                
+                break;
+        }
+    }
+    
+     public static void main(String[] args){
         new ServidorRESOC(17000);
     }
 }
