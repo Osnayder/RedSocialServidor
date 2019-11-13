@@ -51,7 +51,7 @@ public class ServidorRESOC {
                             // aqui va el codigo relacionado cuando se valla a descargar algo.	
                     }*/	
                 } catch (IOException e) {		
-                    System.out.println("Conexion cerrada de manera inesperada: " + e.getMessage());
+                    System.out.println("Conexion cerrada de manera inesperada: " + e);
                     sw = false;
                 } catch (ClassNotFoundException e) {	
                     System.out.println("\nError: "+e.getMessage());
