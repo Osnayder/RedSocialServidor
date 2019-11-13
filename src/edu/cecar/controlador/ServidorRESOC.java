@@ -50,7 +50,7 @@ public class ServidorRESOC {
                 Usuario u = (Usuario) archivo.getObjecto();
 		              System.out.println("contenido "+u.getNombres());			
             } catch (IOException e) {		
-                System.out.println("Conexión cerrada de manera inesperada. " + e); 
+                System.out.println("Conexión Cerrada de Manera Inesperada. " + e); 
                 sw = false;
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();		
@@ -59,5 +59,9 @@ public class ServidorRESOC {
             }
 
         }
+    }
+    
+    public static void main(String[] args){
+        new ServidorRESOC(17000);
     }
 }
