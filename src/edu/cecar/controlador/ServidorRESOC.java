@@ -9,6 +9,7 @@ package edu.cecar.controlador;
 import edu.cecar.componentes.ConectarMySQL;
 import edu.cecar.componentes.comunicaciones.ServerSocketObjeto;
 import edu.cecar.modelo.Archivo;
+import edu.cecar.modelo.Usuario;
 import edu.cecar.persistencia.BD;
 import java.io.IOException;
 import java.sql.PreparedStatement;
@@ -34,35 +35,29 @@ import java.util.logging.Logger;
 public class ServidorRESOC {
 
     public ServidorRESOC(int puerto){
-        System.out.println("Servidor de Archivos Montado");
-				
-        ServerSocketObjeto serverSocket = new ServerSocketObjeto(puerto); 
+                
+        System.out.println("Servidor montado");
+        ServerSocketObjeto serverSocket = new ServerSocketObjeto(puerto);   
         boolean sw = true;
+	
+        while (sw) {
 			
-            while (sw) {
-                try {
-                    Object object = serverSocket.getEntrada().readObject();		
-                    Archivo archivo = (Archivo)object;
-			/*		
-                    if (archivo.getOperacionEnvio().equals("Subida")) { 
-                            BD.guardar(archivo);
-                            System.out.println("informacion: "+archivo.getOperacionInterna());
-                    } else {
-                            // aqui va el codigo relacionado cuando se valla a descargar algo.	
-                    }*/	
-                } catch (IOException e) {		
-                    System.out.println("Conexion cerrada de manera inesperada: " + e);
-                    sw = false;
-                } catch (ClassNotFoundException e) {	
-                    System.out.println("\nError: "+e.getMessage());
-                } catch (Exception e) {
-                   System.out.println("\nError: "+e.getMessage());
-                }
-            }
-    }
-    
-    public static void main(String[] args) {
-       new ServidorRESOC(17000);
-    }
+            try {
 
+                Object object = serverSocket.getEntrada().readObject();		
+                Archivo archivo = (Archivo)object;
+                System.out.println("Se Descargo Exitosamente el Archivo");                            
+                Usuario u = (Usuario) archivo.getObjecto();
+		              System.out.println("contenido "+u.getNombres());			
+            } catch (IOException e) {		
+                System.out.println("Conexión cerrada de manera inesperada. " + e); 
+                sw = false;
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();		
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
 }

@@ -57,7 +57,5 @@ public class Archivo implements Serializable{
     public void setOperacionInterna(int operacionInterna) {
         this.operacionInterna = operacionInterna;
     }
-	
-    
     
 }

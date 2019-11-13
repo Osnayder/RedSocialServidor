@@ -12,12 +12,11 @@ final public class ServerSocketObjeto {
 	private ObjectOutputStream salida;
 
 	public ServerSocketObjeto(int puerto) {
-
 		try {
 			serverSocket = new ServerSocket(puerto);  
 			socket = serverSocket.accept();
-
-			salida = new ObjectOutputStream(socket.getOutputStream());
+                        
+			salida = new ObjectOutputStream(socket.getOutputStream()); 
 			entrada = new ObjectInputStream(socket.getInputStream());
 
 		} catch (Exception e)   {
