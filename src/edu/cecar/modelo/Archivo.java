@@ -6,6 +6,8 @@
 
 package edu.cecar.modelo;
 
+import java.io.Serializable;
+
 /** Clase: 
  * 
  * @version: 1.0
@@ -19,8 +21,9 @@ package edu.cecar.modelo;
  * Copyrigth: CECAR
  */
 
-public class Archivo {
+public class Archivo implements Serializable{
 
+    private static final long serialVersionUID = 1000L;
     private Object objecto;
     private String OperacionEnvio;
     private int operacionInterna;

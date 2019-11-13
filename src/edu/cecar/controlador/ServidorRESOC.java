@@ -43,19 +43,20 @@ public class ServidorRESOC {
                 try {
                     Object object = serverSocket.getEntrada().readObject();		
                     Archivo archivo = (Archivo)object;
-					
+			/*		
                     if (archivo.getOperacionEnvio().equals("Subida")) { 
                             BD.guardar(archivo);
+                            System.out.println("informacion: "+archivo.getOperacionInterna());
                     } else {
                             // aqui va el codigo relacionado cuando se valla a descargar algo.	
-                    }	
+                    }*/	
                 } catch (IOException e) {		
-                    System.out.println("Conexion cerrada de manera inesperada. " + e);
+                    System.out.println("Conexion cerrada de manera inesperada: " + e.getMessage());
                     sw = false;
                 } catch (ClassNotFoundException e) {	
-                    e.printStackTrace();
+                    System.out.println("\nError: "+e.getMessage());
                 } catch (Exception e) {
-                    e.printStackTrace();
+                   System.out.println("\nError: "+e.getMessage());
                 }
             }
     }
