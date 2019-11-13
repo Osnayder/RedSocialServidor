@@ -1,45 +1,60 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
 package edu.cecar.modelo;
 
-import java.io.Serializable;
+/** Clase: 
+ * 
+ * @version: 1.0
+ *  
+ * @sincelejo: 21/08/2019
+ * 
+ * Fecha de Modificación: 
+ * 
+ * @author: Osnayder Conde Rodriguez
+ * 
+ * Copyrigth: CECAR
+ */
 
+public class Archivo {
 
-public class Archivo implements Serializable{
-	
-	
-	private static final long serialVersionUID = 1000L;
-	private String nombre;
-	private byte[] bytes;
-	private String Operacion;
-        private int operacionInterna;
-	
-	public Archivo(String nombre,String operacion) {
-		this.nombre = nombre;
-		this.Operacion = operacion;
-	}
-	
-	
-	public Archivo(String nombre, byte[] bytes, String operacion) {
-		
-		this.nombre = nombre;
-		this.bytes = bytes;
-		Operacion = operacion;
-	}
+    private Object objecto;
+    private String OperacionEnvio;
+    private int operacionInterna;
 
-	public void setBytes(byte[] bytes) {
-		this.bytes = bytes;
-	}
-	
-	public String getNombre() {
-		return nombre;
-	}
+    public Archivo(String OperacionEnvio, int operacionInterna, Object objecto) {
+        this.objecto = objecto;
+        this.OperacionEnvio = OperacionEnvio;
+        this.operacionInterna = operacionInterna;
+    }
 
-	public byte[] getBytes() {
-		return bytes;
-	}
-		
-	public String getOperacion() {
-		return Operacion;
-	}
-	
+    public Object getObjecto() {
+        return objecto;
+    }
 
+    public void setObjecto(Object objecto) {
+        this.objecto = objecto;
+    }
+
+    public String getOperacionEnvio() {
+        return OperacionEnvio;
+    }
+
+    public void setOperacionEnvio(String OperacionEnvio) {
+        this.OperacionEnvio = OperacionEnvio;
+    }
+
+    public int getOperacionInterna() {
+        return operacionInterna;
+    }
+
+    public void setOperacionInterna(int operacionInterna) {
+        this.operacionInterna = operacionInterna;
+    }
+	
+    
+    
 }

@@ -7,6 +7,10 @@
 package edu.cecar.controlador;
 
 import edu.cecar.componentes.ConectarMySQL;
+import edu.cecar.componentes.comunicaciones.ServerSocketObjeto;
+import edu.cecar.modelo.Archivo;
+import edu.cecar.persistencia.BD;
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,21 +33,35 @@ import java.util.logging.Logger;
 
 public class ServidorRESOC {
 
-    public static void main(String[] args) {
-       
-      ConectarMySQL conexion = new ConectarMySQL();
-       
-       PreparedStatement preparedStatement;
-        try {
-            preparedStatement = conexion.getInstance().prepareStatement("SELECT * FROM departamentos");
-            preparedStatement.execute();
-            ResultSet rs = preparedStatement.getResultSet();
-            while (rs.next()){
-                System.out.println (rs.getInt(1)+ "   "+rs.getString(2)+"  "+rs.getString(3));
+    public ServidorRESOC(int puerto){
+        System.out.println("Servidor de Archivos Montado");
+				
+        ServerSocketObjeto serverSocket = new ServerSocketObjeto(puerto); 
+        boolean sw = true;
+			
+            while (sw) {
+                try {
+                    Object object = serverSocket.getEntrada().readObject();		
+                    Archivo archivo = (Archivo)object;
+					
+                    if (archivo.getOperacionEnvio().equals("Subida")) { 
+                            BD.guardar(archivo);
+                    } else {
+                            // aqui va el codigo relacionado cuando se valla a descargar algo.	
+                    }	
+                } catch (IOException e) {		
+                    System.out.println("Conexion cerrada de manera inesperada. " + e);
+                    sw = false;
+                } catch (ClassNotFoundException e) {	
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(ServidorRESOC.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    }
+    
+    public static void main(String[] args) {
+       new ServidorRESOC(17000);
     }
 
 }

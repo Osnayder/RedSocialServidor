@@ -33,9 +33,9 @@ public class ConectarMySQL {
 			
 			String url= "jdbc:mysql://"+properties.getProperty("host")+ ":"+properties.getProperty("port")+"/"+properties.getProperty("baseDatos")+ "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"; 
 			connection=DriverManager.getConnection(url,properties.getProperty("usuario"),properties.getProperty("password"));
-
+                        System.out.println("Conexion a BD exitosa!");
 		}catch  (Exception e) {
-			System.out.println("Error"+e);
+			System.out.println("Conexion a BD, Error"+e);
 		}
             }
 	}
