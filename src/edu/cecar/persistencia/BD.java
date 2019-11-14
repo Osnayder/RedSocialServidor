@@ -5,6 +5,8 @@ import edu.cecar.modelo.Sesion;
 import edu.cecar.modelo.Usuario;
 import java.sql.CallableStatement;
 import java.sql.SQLException;
+import java.sql.Types;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -84,8 +86,26 @@ public class BD {
         }
     }
     
-    public static void consultaInicioSesion(Sesion sesion){
+    
+    
+    public static  Date consultaInicioSesion(Sesion sesion){
+        ConectarMySQL conexion = new ConectarMySQL();
+        CallableStatement procedimiento_1;
+        Date date = null;
         
+        try {
+            procedimiento_1 = conexion.getInstance().prepareCall("{call consultarsesion(?,?,?)}");
+            procedimiento_1.setInt(1,sesion.getIdUsuario());
+            procedimiento_1.setString(2,sesion.getContrasena());
+            procedimiento_1.registerOutParameter(3,Types.DATE);
+            procedimiento_1.execute();
+            date = procedimiento_1.getDate(3);
+            System.out.println("Se cosulto el usuario en BD");
+        } catch (SQLException ex) {
+            Logger.getLogger(BD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       
+        return date;
     }
     
 }

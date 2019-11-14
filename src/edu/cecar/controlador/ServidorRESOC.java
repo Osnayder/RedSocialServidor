@@ -1,22 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package edu.cecar.controlador;
 
-import edu.cecar.componentes.ConectarMySQL;
-import edu.cecar.componentes.Utilidades;
 import edu.cecar.componentes.comunicaciones.ServerSocketObjeto;
 import edu.cecar.modelo.Archivo;
+import edu.cecar.modelo.Sesion;
 import edu.cecar.modelo.Usuario;
 import edu.cecar.persistencia.BD;
 import java.io.IOException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,11 +24,13 @@ import java.util.logging.Logger;
  */
 
 public class ServidorRESOC {
-
+    
+    ServerSocketObjeto serverSocket;
+    
     public ServidorRESOC(int puerto){
                 
         System.out.println("Servidor montado");
-        ServerSocketObjeto serverSocket = new ServerSocketObjeto(puerto);   
+        serverSocket = new ServerSocketObjeto(puerto);   
         boolean sw = true;
 	
         while (sw) {
@@ -49,12 +41,10 @@ public class ServidorRESOC {
                 
                 if(archivo.getOperacionEnvio().equals("Subida")){
                     System.out.println("!Se Recibio Petecion de Cliente!");
-                    System.out.println("contenido: "+((Usuario)archivo.getObjecto()).getIdUsuario() + " "+((Usuario)archivo.getObjecto()).getNombres()+" "+((Usuario)archivo.getObjecto()).getCelular().get(0)+" "+((Usuario)archivo.getObjecto()).getTelefonos().get(0));
                     procesarSolicitud(archivo);
                 }else{
                     
                 }
-                
                 
             } catch (IOException e) {		
                 System.out.println("Conexión Cerrada de Manera Inesperada. " + e); 
@@ -67,8 +57,7 @@ public class ServidorRESOC {
 
         }
     }
-    
-   
+       
     private void procesarSolicitud(Archivo archivoRecibido){
         switch(archivoRecibido.getOperacionInterna()){
             case 1: 
@@ -76,6 +65,22 @@ public class ServidorRESOC {
                 System.out.println("Se Agrego Un Nuevo Usuario a RESOC!");
                 break;
             case 2:
+                 Sesion archivoSesion = new Sesion(((Sesion)archivoRecibido.getObjecto()).getIdUsuario(), 
+                                        ((Sesion)archivoRecibido.getObjecto()).getContrasena(),null, false);
+                 
+                 Date date = BD.consultaInicioSesion(archivoSesion);
+                 archivoSesion.setUltimaConexion(date);
+                
+                 
+                        try {
+                            serverSocket.getSalida().writeObject(archivoSesion);
+                            System.out.println(": "+archivoSesion.getIdUsuario()+" "+archivoSesion.getContrasena());
+                            System.out.println("Se envio los datos de sesion a usuario");
+                        } catch (IOException ex) {
+                            System.out.println("Error envinado datos de sesion a usuario");
+                            Logger.getLogger(ServidorRESOC.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    
                 
                 break;
         }
