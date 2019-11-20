@@ -28,7 +28,7 @@ public class BD {
     public static void agregarUsuario(Usuario usuarioNuevo) {
         
         ConectarMySQL conexion = new ConectarMySQL();
-        CallableStatement procedimiento_1, procedimiento_2,procedimiento_3;
+        CallableStatement procedimiento_1, procedimiento_2,procedimiento_3,procedimiento_4;
         
         int identificacion  = usuarioNuevo.getIdUsuario();
         String nombres      = usuarioNuevo.getNombres();
@@ -81,6 +81,19 @@ public class BD {
                 procedimiento_3.execute();
             }
             System.out.println("Se registro el celular");
+        } catch (SQLException ex) {
+            Logger.getLogger(BD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        try {
+            procedimiento_4 = conexion.getInstance().prepareCall("{call agregarredsocial(?,?,?)}");
+            for(int i=0; i<usuarioNuevo.getOtrasredes().size(); i++){
+                procedimiento_4.setString(1,usuarioNuevo.getOtrasredes().get(i).getNombre());
+                procedimiento_4.setString(2,usuarioNuevo.getOtrasredes().get(i).getCuenta());
+                procedimiento_4.setInt(3, identificacion);
+                procedimiento_4.execute();
+            }
+            System.out.println("Se registro la red social");
         } catch (SQLException ex) {
             Logger.getLogger(BD.class.getName()).log(Level.SEVERE, null, ex);
         }

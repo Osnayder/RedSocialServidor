@@ -34,7 +34,7 @@ public class ServidorRESOC {
         boolean sw = true;
 	
         while (sw) {
-			
+			         System.out.println("mmm");
             try {
                 Object object = serverSocket.getEntrada().readObject();		
                 Archivo archivo = (Archivo)object;

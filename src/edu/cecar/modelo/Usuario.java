@@ -28,7 +28,7 @@ public class Usuario implements Serializable{
     private String direccion;
     private ArrayList<Long> celular;
     private ArrayList<Long> telefonos;
-    private ArrayList<String> otrasredes;
+    private ArrayList<Red> otrasredes;
     private Date ulitmaconexion;
     private boolean estadoconexion;
     private String departamento;
@@ -88,7 +88,7 @@ public class Usuario implements Serializable{
         return telefonos;
     }
 
-    public ArrayList<String> getOtrasredes() {
+    public ArrayList<Red> getOtrasredes() {
         return otrasredes;
     }
 
