@@ -1,11 +1,15 @@
 package edu.cecar.persistencia;
 
 import edu.cecar.componentes.ConectarMySQL;
+import edu.cecar.modelo.Red;
 import edu.cecar.modelo.Sesion;
 import edu.cecar.modelo.Usuario;
 import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -121,4 +125,83 @@ public class BD {
         return date;
     }
     
+    public static Usuario consultarUsuario(int codigo){
+        Usuario usuario           = null;
+        ArrayList<Long> celulares = null;
+        ArrayList<Long> telefonos = null;
+        ArrayList<Red> otrasredes = null;
+        PreparedStatement procedimientoN1,procedimientoN2,procedimientoN3,procedimientoN4;
+        ConectarMySQL conexion    = new ConectarMySQL();
+        
+        try {
+            telefonos = new ArrayList();
+            procedimientoN2 = conexion.getInstance().prepareStatement("SELECT * FROM telefonos WHERE idusuario_fk4 = ?");
+            procedimientoN2.setInt(1, codigo);
+            procedimientoN2.execute();
+            ResultSet resultSet2 = procedimientoN2.getResultSet();
+            while(resultSet2.next()){
+                telefonos.add(resultSet2.getLong(1));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        try {
+            celulares = new ArrayList();
+            procedimientoN3 = conexion.getInstance().prepareStatement("SELECT * FROM celulares WHERE fk_idusuario6 = ?");
+            procedimientoN3.setInt(1, codigo);
+            procedimientoN3.execute();
+            ResultSet resultSet3 = procedimientoN3.getResultSet();
+            while(resultSet3.next()){
+                celulares.add(resultSet3.getLong(1));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        try {
+            otrasredes = new ArrayList();
+            Red red = null;
+            procedimientoN4 = conexion.getInstance().prepareStatement("SELECT * FROM redessociales WHERE fk_usuario5 = ?");
+            procedimientoN4.setInt(1, codigo);
+            procedimientoN4.execute();
+            ResultSet resultSet4 = procedimientoN4.getResultSet();
+            while(resultSet4.next()){
+                red = new Red(resultSet4.getString(2),resultSet4.getString(3));
+                otrasredes.add(red);
+                red = null;
+            }
+            System.out.println("====**===");
+        } catch (SQLException ex) {
+            Logger.getLogger(BD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        try {
+            procedimientoN1 = conexion.getInstance().prepareStatement("SELECT * FROM usuarios WHERE idusuario = ?");
+            procedimientoN1.setInt(1,codigo);
+            procedimientoN1.execute();
+            ResultSet resultSet = procedimientoN1.getResultSet();
+            
+            if(resultSet.next()){
+                int identificacion  = resultSet.getInt(1);
+                String nombres      = resultSet.getString(2);
+                String apellidos    = resultSet.getString(3);
+                java.sql.Date fecha = resultSet.getDate(4);
+                byte foto[]         = resultSet.getBytes(5);
+                String direccion    = resultSet.getString(6);
+                java.sql.Date ultimaconexion = resultSet.getDate(7);
+                boolean estadoconexion       = resultSet.getBoolean(8);
+                String departamento = resultSet.getString(9);
+                String descripcion  = resultSet.getString(10);
+                String contrasena   = resultSet.getString(11);
+                usuario = new Usuario(identificacion, nombres, apellidos, fecha, foto, direccion, celulares, telefonos, 
+                                      otrasredes, ultimaconexion, estadoconexion, departamento, descripcion, contrasena);
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(BD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return usuario;
+    }
 }

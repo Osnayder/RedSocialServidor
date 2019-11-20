@@ -71,8 +71,7 @@ public class ServidorRESOC {
                  
                  Date date = BD.consultaInicioSesion(archivoSesion);
                  archivoSesion.setUltimaConexion(date);
-                
-                 
+                            
                         try {
                             serverSocket.getSalida().writeObject(archivoSesion);
                             System.out.println(": "+archivoSesion.getIdUsuario()+" "+archivoSesion.getContrasena());
@@ -80,8 +79,20 @@ public class ServidorRESOC {
                         } catch (IOException ex) {
                             System.out.println("Error envinado datos de sesion a usuario");
                             Logger.getLogger(ServidorRESOC.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    
+                        }                
+                break;
+                
+            case 3:
+                Integer intero = (Integer)archivoRecibido.getObjecto();
+                Usuario usuario = BD.consultarUsuario(intero.intValue());
+                
+                        try {
+                            serverSocket.getSalida().writeObject(usuario);
+                            System.out.println("Se envio extraidos de BD usuario");
+                        } catch (IOException ex) {
+                            System.out.println("Error ==**");
+                            Logger.getLogger(ServidorRESOC.class.getName()).log(Level.SEVERE, null, ex);
+                        }   
                 
                 break;
         }

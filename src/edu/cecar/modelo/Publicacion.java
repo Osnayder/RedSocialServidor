@@ -33,5 +33,70 @@ public class Publicacion {
     Time hora;
     int tipo_privacidad;
     
-    
+    public Publicacion(){}
+    public Publicacion(int id, byte[] cuerpo, int megusta, int nomegusta, Date fecha, Time hora, int tipo_privacidad) {
+        this.id = id;
+        this.cuerpo = cuerpo;
+        this.megusta = megusta;
+        this.nomegusta = nomegusta;
+        this.fecha = fecha;
+        this.hora = hora;
+        this.tipo_privacidad = tipo_privacidad;
+    }
+
+    public int getTipo_privacidad() {
+        return tipo_privacidad;
+    }
+
+    public void setTipo_privacidad(int tipo_privacidad) {
+        this.tipo_privacidad = tipo_privacidad;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public byte[] getCuerpo() {
+        return cuerpo;
+    }
+
+    public void setCuerpo(byte[] cuerpo) {
+        this.cuerpo = cuerpo;
+    }
+
+    public int getMegusta() {
+        return megusta;
+    }
+
+    public void setMegusta(int megusta) {
+        this.megusta = megusta;
+    }
+
+    public int getNomegusta() {
+        return nomegusta;
+    }
+
+    public void setNomegusta(int nomegusta) {
+        this.nomegusta = nomegusta;
+    }
+
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
+    }
+
+    public Time getHora() {
+        return hora;
+    }
+
+    public void setHora(Time hora) {
+        this.hora = hora;
+    }
 }
