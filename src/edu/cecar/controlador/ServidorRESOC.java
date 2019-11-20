@@ -1,5 +1,6 @@
 package edu.cecar.controlador;
 
+import edu.cecar.componentes.ConectarMySQL;
 import edu.cecar.componentes.comunicaciones.ServerSocketObjeto;
 import edu.cecar.modelo.Archivo;
 import edu.cecar.modelo.Sesion;
@@ -30,13 +31,15 @@ public class ServidorRESOC {
     public ServidorRESOC(int puerto){
                 
         System.out.println("Servidor montado");
+        
         serverSocket = new ServerSocketObjeto(puerto);   
         boolean sw = true;
 	
         while (sw) {
-			         System.out.println("mmm");
             try {
-                Object object = serverSocket.getEntrada().readObject();		
+                System.out.println("entro en ciclo");
+                Object object = serverSocket.getEntrada().readObject();
+                
                 Archivo archivo = (Archivo)object;
                 
                 if(archivo.getOperacionEnvio().equals("Subida")){
@@ -45,7 +48,6 @@ public class ServidorRESOC {
                 }else{
                     
                 }
-                
             } catch (IOException e) {		
                 System.out.println("Conexión Cerrada de Manera Inesperada. " + e); 
                 sw = false;
@@ -54,7 +56,6 @@ public class ServidorRESOC {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
     }
        

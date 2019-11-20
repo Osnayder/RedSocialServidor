@@ -31,7 +31,7 @@ public class ConectarMySQL {
                         Properties properties = new Properties();
                         properties.load(new FileInputStream("Conexion.properties"));
 			
-			String url= "jdbc:mysql://"+properties.getProperty("host")+ ":"+properties.getProperty("port")+"/"+properties.getProperty("baseDatos")+ "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"; 
+			String url= "jdbc:mysql://"+properties.getProperty("host")+ ":"+properties.getProperty("port")+"/"+properties.getProperty("baseDatos")+ "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useServerPrepStmts=true"; 
 			connection=DriverManager.getConnection(url,properties.getProperty("usuario"),properties.getProperty("password"));
                         System.out.println("Conexion a BD exitosa!");
 		}catch  (Exception e) {
