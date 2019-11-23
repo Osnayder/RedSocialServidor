@@ -1,6 +1,7 @@
 package edu.cecar.persistencia;
 
 import edu.cecar.componentes.ConectarMySQL;
+import edu.cecar.modelo.Publicacion;
 import edu.cecar.modelo.Red;
 import edu.cecar.modelo.Sesion;
 import edu.cecar.modelo.Usuario;
@@ -101,6 +102,7 @@ public class BD {
         } catch (SQLException ex) {
             Logger.getLogger(BD.class.getName()).log(Level.SEVERE, null, ex);
         }
+        conexion.cerrarConexion();
     }
     
     
@@ -121,7 +123,7 @@ public class BD {
         } catch (SQLException ex) {
             Logger.getLogger(BD.class.getName()).log(Level.SEVERE, null, ex);
         }
-       
+        conexion.cerrarConexion();
         return date;
     }
     
@@ -201,7 +203,72 @@ public class BD {
         } catch (SQLException ex) {
             Logger.getLogger(BD.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+        conexion.cerrarConexion();
         return usuario;
     }
+    
+    public static void agregarPublicacion(Publicacion publicacion){
+        ConectarMySQL conexion = new ConectarMySQL();
+        PreparedStatement procedimiento = null;
+        
+        try {
+            procedimiento = conexion.getInstance().prepareStatement("INSERT INTO publicaciones VALUES(null,?,?,?,?,?,?,?,?)");
+            procedimiento.setInt(1,publicacion.getMegusta());
+            procedimiento.setInt(2,publicacion.getNomegusta());
+            procedimiento.setBytes(3, publicacion.getCuerpo());
+            procedimiento.setString(4, publicacion.getTetxo());
+            procedimiento.setDate(5, publicacion.getFecha());
+            procedimiento.setTime(6, publicacion.getHora());
+            procedimiento.setInt(7, publicacion.getTipo_privacidad());
+            procedimiento.setInt(8, publicacion.getIdUsuario());
+            procedimiento.execute();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(BD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        conexion.cerrarConexion();
+    }
+    
+    public static ArrayList<Publicacion> consultarPublicaciones(Sesion sesion){
+        ConectarMySQL conexion          = new ConectarMySQL();
+        PreparedStatement procedimiento = null;
+        Publicacion         publicacion = null;
+        ArrayList<Publicacion> listaPublicaciones  = null;
+       
+        
+        try {
+            procedimiento = conexion.getInstance().prepareStatement("SELECT * FROM publicaciones WHERE idusuario_fk1 = ?");
+            procedimiento.setInt(1,sesion.getIdUsuario());
+            procedimiento.execute();
+            publicacion = new Publicacion();
+            listaPublicaciones    = new ArrayList();
+            ResultSet resultSet = procedimiento.getResultSet();
+            while(resultSet.next()){
+
+                publicacion.setMegusta(resultSet.getInt(2));
+                publicacion.setNomegusta(resultSet.getInt(3));
+                publicacion.setCuerpo(resultSet.getBytes(4));
+                publicacion.setTetxo(resultSet.getString(5));
+                publicacion.setFecha(resultSet.getDate(6));
+                publicacion.setHora(resultSet.getTime(7));
+                publicacion.setTipo_privacidad(resultSet.getInt(8));
+                listaPublicaciones.add(publicacion);
+                publicacion = new Publicacion();
+                
+            }
+            System.out.println("Se consulto de manera exitosa las publicaciones");
+        } catch (SQLException ex) {
+            Logger.getLogger(BD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        for(int i=0; i<2; i++){
+            System.out.println("Me gustas: "+listaPublicaciones.get(i).getMegusta());
+            System.out.println("Me no gustas: "+listaPublicaciones.get(i).getNomegusta());
+            System.out.println("Me texto: "+listaPublicaciones.get(i).getTetxo());
+            System.out.println("Me fecha: "+listaPublicaciones.get(i).getFecha());
+            System.out.println("Me hora: "+listaPublicaciones.get(i).getHora());
+        }
+        
+        return listaPublicaciones;
+    }  
 }

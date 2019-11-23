@@ -3,10 +3,12 @@ package edu.cecar.controlador;
 import edu.cecar.componentes.ConectarMySQL;
 import edu.cecar.componentes.comunicaciones.ServerSocketObjeto;
 import edu.cecar.modelo.Archivo;
+import edu.cecar.modelo.Publicacion;
 import edu.cecar.modelo.Sesion;
 import edu.cecar.modelo.Usuario;
 import edu.cecar.persistencia.BD;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -94,6 +96,20 @@ public class ServidorRESOC {
                             Logger.getLogger(ServidorRESOC.class.getName()).log(Level.SEVERE, null, ex);
                         }   
                 
+                break;
+            case 4: 
+                BD.agregarPublicacion((Publicacion)archivoRecibido.getObjecto());
+                System.out.println("Se Agrego una nueva publicacion");
+                break;
+            case 5:
+                ArrayList<Publicacion> publicacioEnviar = BD.consultarPublicaciones((Sesion)archivoRecibido.getObjecto());
+                        try {
+                            serverSocket.getSalida().writeObject(publicacioEnviar);
+                            System.out.println("Se envio extraidos de BD usuario");
+                        } catch (IOException ex) {
+                            System.out.println("Error ==**");
+                            Logger.getLogger(ServidorRESOC.class.getName()).log(Level.SEVERE, null, ex);
+                        }   
                 break;
         }
     }
