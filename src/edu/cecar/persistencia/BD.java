@@ -232,7 +232,6 @@ public class BD {
     public static ArrayList<Publicacion> consultarPublicaciones(Sesion sesion){
         ConectarMySQL conexion          = new ConectarMySQL();
         PreparedStatement procedimiento = null;
-        Publicacion         publicacion = null;
         ArrayList<Publicacion> listaPublicaciones  = null;
        
         
@@ -240,21 +239,12 @@ public class BD {
             procedimiento = conexion.getInstance().prepareStatement("SELECT * FROM publicaciones WHERE idusuario_fk1 = ?");
             procedimiento.setInt(1,sesion.getIdUsuario());
             procedimiento.execute();
-            publicacion = new Publicacion();
+            
             listaPublicaciones    = new ArrayList();
             ResultSet resultSet = procedimiento.getResultSet();
-            while(resultSet.next()){
-
-                publicacion.setMegusta(resultSet.getInt(2));
-                publicacion.setNomegusta(resultSet.getInt(3));
-                publicacion.setCuerpo(resultSet.getBytes(4));
-                publicacion.setTetxo(resultSet.getString(5));
-                publicacion.setFecha(resultSet.getDate(6));
-                publicacion.setHora(resultSet.getTime(7));
-                publicacion.setTipo_privacidad(resultSet.getInt(8));
-                listaPublicaciones.add(publicacion);
-                publicacion = new Publicacion();
-                
+            while(resultSet.next()){ 
+               listaPublicaciones.add(new Publicacion(0,resultSet.getBytes("cuerpo"),resultSet.getString(5),resultSet.getInt(2),
+                                         resultSet.getInt(3),resultSet.getDate(6),resultSet.getTime(7),resultSet.getInt(8)));
             }
             System.out.println("Se consulto de manera exitosa las publicaciones");
         } catch (SQLException ex) {
@@ -267,6 +257,9 @@ public class BD {
             System.out.println("Me texto: "+listaPublicaciones.get(i).getTetxo());
             System.out.println("Me fecha: "+listaPublicaciones.get(i).getFecha());
             System.out.println("Me hora: "+listaPublicaciones.get(i).getHora());
+            if(listaPublicaciones.get(i).getCuerpo()!=null){
+                System.out.println("La foto existe");
+            }
         }
         
         return listaPublicaciones;
