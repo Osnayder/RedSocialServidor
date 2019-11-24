@@ -5,6 +5,7 @@ import edu.cecar.modelo.Publicacion;
 import edu.cecar.modelo.Red;
 import edu.cecar.modelo.Sesion;
 import edu.cecar.modelo.Usuario;
+import edu.cecar.modelo.UsuarioConsulta;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -264,4 +265,80 @@ public class BD {
         
         return listaPublicaciones;
     }  
+    
+    public static void agregarSolicitud(String codigo){
+        ConectarMySQL conexion          = new ConectarMySQL();
+        PreparedStatement procedimiento = null;
+        
+        try {
+            procedimiento = conexion.getInstance().prepareStatement("INSERT INTO solicitudes VALUES(?,?,?,?)");
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(BD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        conexion.cerrarConexion();
+    }
+    
+    public static ArrayList<UsuarioConsulta> consultarUsuarioB1(String entrada){
+        ConectarMySQL conexion          = new ConectarMySQL();
+        PreparedStatement procedimiento = null;
+        
+        ArrayList<UsuarioConsulta> listaUsuario = new ArrayList<>();
+        
+        String codigo = "";
+        String criterioX0 = "";
+        
+        for(int i=0; i<entrada.length(); i++){
+            if(i>0){
+                if(entrada.charAt(i)!='+'){
+                    criterioX0 = criterioX0+entrada.charAt(i-2);
+                }
+                if(entrada.charAt(i-1)=='+'){
+                  for(;i<entrada.length(); i++){
+                      codigo = codigo + entrada.charAt(i);
+                  }
+                  break;
+                }
+            }
+        }
+        
+        switch (criterioX0) {
+            case "0":
+                try {
+                    procedimiento = conexion.getInstance().prepareStatement("SELECT idusuario,nombres,apellidos,departamento,fechanacimiento FROM usuarios WHERE nombres = ? ");
+                    procedimiento.setString(1, codigo);
+                    procedimiento.execute();
+                    ResultSet resultSet = procedimiento.getResultSet();
+                    while(resultSet.next()){
+                        listaUsuario.add(new UsuarioConsulta(resultSet.getInt(1),resultSet.getString(2), resultSet.getString(3),resultSet.getString(4), 0));
+                    }
+                   
+                } catch (SQLException ex) {
+                    Logger.getLogger(BD.class.getName()).log(Level.SEVERE, null, ex);
+                }   break;
+            case "1":
+                try {
+                    procedimiento = conexion.getInstance().prepareStatement("SELECT idusuario,nombres,apellidos,departamento,fechanacimiento FROM usuarios WHERE departamento = ?");
+                    procedimiento.setString(1, codigo);
+                    procedimiento.execute();
+                    ResultSet resultSet = procedimiento.getResultSet();
+                    while(resultSet.next()){
+                        listaUsuario.add(new UsuarioConsulta(resultSet.getInt(1),resultSet.getString(2), resultSet.getString(3),resultSet.getString(4), 0));
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(BD.class.getName()).log(Level.SEVERE, null, ex);
+                }   break;
+            case "2":
+                try {
+                    procedimiento = conexion.getInstance().prepareStatement("");
+                } catch (SQLException ex) {
+                    Logger.getLogger(BD.class.getName()).log(Level.SEVERE, null, ex);
+                }   break;
+            default:
+                break;
+        }
+        
+        System.out.println("Se hizo la busqueda de usuarios para hacer amigo");
+        return listaUsuario;
+    }
 }

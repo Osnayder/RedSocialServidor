@@ -5,6 +5,7 @@ import edu.cecar.modelo.Archivo;
 import edu.cecar.modelo.Publicacion;
 import edu.cecar.modelo.Sesion;
 import edu.cecar.modelo.Usuario;
+import edu.cecar.modelo.UsuarioConsulta;
 import edu.cecar.persistencia.BD;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -73,27 +74,27 @@ public class ServidorRESOC {
                  Date date = BD.consultaInicioSesion(archivoSesion);
                  archivoSesion.setUltimaConexion(date);
                             
-                        try {
-                            serverSocket.getSalida().writeObject(archivoSesion);
-                            System.out.println(": "+archivoSesion.getIdUsuario()+" "+archivoSesion.getContrasena());
-                            System.out.println("Se envio los datos de sesion a usuario");
-                        } catch (IOException ex) {
-                            System.out.println("Error envinado datos de sesion a usuario");
-                            Logger.getLogger(ServidorRESOC.class.getName()).log(Level.SEVERE, null, ex);
-                        }                
+                    try {
+                        serverSocket.getSalida().writeObject(archivoSesion);
+                        System.out.println(": "+archivoSesion.getIdUsuario()+" "+archivoSesion.getContrasena());
+                        System.out.println("Se envio los datos de sesion a usuario");
+                    } catch (IOException ex) {
+                        System.out.println("Error envinado datos de sesion a usuario");
+                        Logger.getLogger(ServidorRESOC.class.getName()).log(Level.SEVERE, null, ex);
+                    }                
                 break;
                 
             case 3:
                 Integer intero = (Integer)archivoRecibido.getObjecto();
                 Usuario usuario = BD.consultarUsuario(intero.intValue());
                 
-                        try {
-                            serverSocket.getSalida().writeObject(usuario);
-                            System.out.println("Se envio extraidos de BD usuario");
-                        } catch (IOException ex) {
-                            System.out.println("Error ==**");
-                            Logger.getLogger(ServidorRESOC.class.getName()).log(Level.SEVERE, null, ex);
-                        }   
+                    try {
+                        serverSocket.getSalida().writeObject(usuario);
+                        System.out.println("Se envio extraidos de BD usuario");
+                    } catch (IOException ex) {
+                        System.out.println("Error ==**");
+                        Logger.getLogger(ServidorRESOC.class.getName()).log(Level.SEVERE, null, ex);
+                    }   
                 
                 break;
             case 4: 
@@ -109,6 +110,20 @@ public class ServidorRESOC {
                             System.out.println("Error ==**");
                             Logger.getLogger(ServidorRESOC.class.getName()).log(Level.SEVERE, null, ex);
                         }   
+                break;
+            case 6:
+                String valorBusqueda = (String)archivoRecibido.getObjecto();
+                ArrayList<UsuarioConsulta> listaUsuaario12 =  BD.consultarUsuarioB1(valorBusqueda);
+                        try {
+                            serverSocket.getSalida().writeObject(listaUsuaario12);
+                            System.out.println("Se envio ");
+                        } catch (IOException ex) {
+                            System.out.println("Error ==**");
+                            Logger.getLogger(ServidorRESOC.class.getName()).log(Level.SEVERE, null, ex);
+                        }   
+                break;
+            case 7:
+                String valorBusquedaUsuario = (String)archivoRecibido.getObjecto();
                 break;
         }
     }
