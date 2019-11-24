@@ -251,7 +251,7 @@ public class BD {
             Logger.getLogger(BD.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        for(int i=0; i<2; i++){
+        /*for(int i=0; i<2; i++){
             System.out.println("Me gustas: "+listaPublicaciones.get(i).getMegusta());
             System.out.println("Me no gustas: "+listaPublicaciones.get(i).getNomegusta());
             System.out.println("Me texto: "+listaPublicaciones.get(i).getTetxo());
@@ -260,7 +260,7 @@ public class BD {
             if(listaPublicaciones.get(i).getCuerpo()!=null){
                 System.out.println("La foto existe");
             }
-        }
+        }*/
         
         return listaPublicaciones;
     }  

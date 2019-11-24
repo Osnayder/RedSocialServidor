@@ -28,6 +28,7 @@ public class Publicacion implements Serializable{
     private java.sql.Date fecha;
     private java.sql.Time hora;
     private int tipo_privacidad;
+    //private int tipo_multimedia;
     
     public Publicacion(){}
 
