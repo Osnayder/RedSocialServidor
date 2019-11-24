@@ -1,6 +1,5 @@
 package edu.cecar.controlador;
 
-import edu.cecar.componentes.ConectarMySQL;
 import edu.cecar.componentes.comunicaciones.ServerSocketObjeto;
 import edu.cecar.modelo.Archivo;
 import edu.cecar.modelo.Publicacion;
