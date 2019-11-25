@@ -63,7 +63,6 @@ public class BD {
             procedimiento_1.setString(10,descripcion);
             procedimiento_1.setString(11,contrasena);
             procedimiento_1.execute();
-            System.out.println("Se registro el usuario en la BD");
         } catch (SQLException ex) {
             Logger.getLogger(BD.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -75,7 +74,6 @@ public class BD {
                 procedimiento_2.setInt(2, identificacion);
                 procedimiento_2.execute();
             }
-            System.out.println("Se registro el telefono");
         } catch (SQLException ex) {
             Logger.getLogger(BD.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -87,7 +85,6 @@ public class BD {
                 procedimiento_3.setInt(2, identificacion);
                 procedimiento_3.execute();
             }
-            System.out.println("Se registro el celular");
         } catch (SQLException ex) {
             Logger.getLogger(BD.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -100,7 +97,6 @@ public class BD {
                 procedimiento_4.setInt(3, identificacion);
                 procedimiento_4.execute();
             }
-            System.out.println("Se registro la red social");
         } catch (SQLException ex) {
             Logger.getLogger(BD.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -121,7 +117,6 @@ public class BD {
             procedimiento_1.registerOutParameter(3,Types.DATE);
             procedimiento_1.execute();
             date = procedimiento_1.getDate(3);
-            System.out.println("Se cosulto el usuario en BD");
         } catch (SQLException ex) {
             Logger.getLogger(BD.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -175,7 +170,6 @@ public class BD {
                 otrasredes.add(red);
                 red = null;
             }
-            System.out.println("====**===");
         } catch (SQLException ex) {
             Logger.getLogger(BD.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -248,7 +242,6 @@ public class BD {
                listaPublicaciones.add(new Publicacion(0,resultSet.getBytes("cuerpo"),resultSet.getString(5),resultSet.getInt(2),
                                          resultSet.getInt(3),resultSet.getDate(6),resultSet.getTime(7),resultSet.getInt(8)));
             }
-            System.out.println("Se consulto de manera exitosa las publicaciones");
         } catch (SQLException ex) {
             Logger.getLogger(BD.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -270,8 +263,6 @@ public class BD {
     public static void agregarSolicitud(Solicitud solicitud){
         ConectarMySQL conexion          = new ConectarMySQL();
         PreparedStatement procedimiento = null;
-        
-        System.out.println("Se va a registrar con la sesion de "+solicitud.getEnvia() +" y se le envia a "+solicitud.getRecibe());
         
         try {
             procedimiento = conexion.getInstance().prepareStatement("INSERT INTO solicitudes VALUES(null,?,?,?,?)");
@@ -370,7 +361,7 @@ public class BD {
             while(resultSet.next()){
                 listaAmigos.add(new UsuarioConsulta(resultSet.getInt(1),resultSet.getString(2), resultSet.getString(3),resultSet.getString(4), 0));
             }
-            System.out.println("Se listo los amigos");
+            
         } catch (SQLException ex) {
             Logger.getLogger(BD.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -412,8 +403,7 @@ public class BD {
     public static void aceptarSolicitud(Solicitud solicitud){
         ConectarMySQL conexion = new ConectarMySQL();
         PreparedStatement procedimiento = null;
-        
-        System.out.println("recibe: "+solicitud.getRecibe()+" Envia: "+solicitud.getEnvia());
+       
         try {
             procedimiento = conexion.getInstance().prepareStatement("UPDATE solicitudes SET estado = 1 WHERE fk_recibesolicitud = ? AND fk_enviasolicitud = ?");
             procedimiento.setInt(1, solicitud.getEnvia());

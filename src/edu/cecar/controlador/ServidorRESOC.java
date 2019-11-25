@@ -66,7 +66,6 @@ public class ServidorRESOC {
         switch(archivoRecibido.getOperacionInterna()){
             case 1: 
                 BD.agregarUsuario((Usuario)archivoRecibido.getObjecto());
-                System.out.println("Se Agrego Un Nuevo Usuario a RESOC!");
                 break;
             case 2:
                  Sesion archivoSesion = new Sesion(((Sesion)archivoRecibido.getObjecto()).getIdUsuario(), 
@@ -77,10 +76,7 @@ public class ServidorRESOC {
                             
                     try {
                         serverSocket.getSalida().writeObject(archivoSesion);
-                        System.out.println(": "+archivoSesion.getIdUsuario()+" "+archivoSesion.getContrasena());
-                        System.out.println("Se envio los datos de sesion a usuario");
                     } catch (IOException ex) {
-                        System.out.println("Error envinado datos de sesion a usuario");
                         Logger.getLogger(ServidorRESOC.class.getName()).log(Level.SEVERE, null, ex);
                     }                
                 break;
@@ -91,24 +87,19 @@ public class ServidorRESOC {
                 
                     try {
                         serverSocket.getSalida().writeObject(usuario);
-                        System.out.println("Se envio extraidos de BD usuario");
                     } catch (IOException ex) {
-                        System.out.println("Error ==**");
                         Logger.getLogger(ServidorRESOC.class.getName()).log(Level.SEVERE, null, ex);
                     }   
                 
                 break;
             case 4: 
                 BD.agregarPublicacion((Publicacion)archivoRecibido.getObjecto());
-                System.out.println("Se Agrego una nueva publicacion");
                 break;
             case 5:
                 ArrayList<Publicacion> publicacioEnviar = BD.consultarPublicaciones((Sesion)archivoRecibido.getObjecto());
                         try {
                             serverSocket.getSalida().writeObject(publicacioEnviar);
-                            System.out.println("Se envio extraidos de BD usuario");
                         } catch (IOException ex) {
-                            System.out.println("Error ==**");
                             Logger.getLogger(ServidorRESOC.class.getName()).log(Level.SEVERE, null, ex);
                         }   
                 break;
