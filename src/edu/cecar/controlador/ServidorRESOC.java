@@ -124,6 +124,33 @@ public class ServidorRESOC {
             case 7:
                 Solicitud valorBusquedaString = (Solicitud)archivoRecibido.getObjecto();
                 BD.agregarSolicitud(valorBusquedaString);
+                
+                break;
+            case 8:
+                Integer identifiacion = (Integer)archivoRecibido.getObjecto();
+                ArrayList<UsuarioConsulta> listaUsuario13 =  BD.consultarAmigos(identifiacion);
+                        try {
+                            serverSocket.getSalida().writeObject(listaUsuario13);
+                        } catch (IOException ex) {
+                            Logger.getLogger(ServidorRESOC.class.getName()).log(Level.SEVERE, null, ex);
+                        }   
+                break;
+            case 9:
+                Integer identificacion = (Integer)archivoRecibido.getObjecto();
+                ArrayList<UsuarioConsulta> listaUsuario = BD.consultarSolicitudes(identificacion);
+                        try {
+                            serverSocket.getSalida().writeObject(listaUsuario);
+                        } catch (IOException ex) {
+                            Logger.getLogger(ServidorRESOC.class.getName()).log(Level.SEVERE, null, ex);
+                        }   
+                break;
+            case 10:
+                Solicitud valorSolicitud = (Solicitud) archivoRecibido.getObjecto();
+                BD.aceptarSolicitud(valorSolicitud);
+                break;
+            case 11:
+                Sesion sesionA = (Sesion) archivoRecibido.getObjecto();
+                BD.eliminarUsuario(sesionA);
                 break;
         }
     }

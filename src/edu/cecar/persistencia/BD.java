@@ -274,11 +274,11 @@ public class BD {
         System.out.println("Se va a registrar con la sesion de "+solicitud.getEnvia() +" y se le envia a "+solicitud.getRecibe());
         
         try {
-            procedimiento = conexion.getInstance().prepareStatement("INSERT INTO solicitudes VALUES(?,?,?,?)");
-            procedimiento.setInt(1,solicitud.getRecibe());
-            procedimiento.setDate(2,solicitud.getFecha());
-            procedimiento.setInt(3, solicitud.getEstado());
-            procedimiento.setInt(4, solicitud.getEnvia());
+            procedimiento = conexion.getInstance().prepareStatement("INSERT INTO solicitudes VALUES(null,?,?,?,?)");
+            procedimiento.setDate(1,solicitud.getFecha());
+            procedimiento.setInt(2, solicitud.getEstado());
+            procedimiento.setInt(3, solicitud.getEnvia());
+            procedimiento.setInt(4,solicitud.getRecibe());
             procedimiento.execute();
         } catch (SQLException ex) {
             Logger.getLogger(BD.class.getName()).log(Level.SEVERE, null, ex);
@@ -350,5 +350,112 @@ public class BD {
             listaUsuario = null;
         }
         return listaUsuario;
+    }
+    
+    public static ArrayList<UsuarioConsulta> consultarAmigos(Integer identificacion){
+        
+        // si estado de solicitud es 0 aun no esta aceptado
+        // si el estado de solicitud es 1 es por que ya acepto la solicitud y es amigo.
+        // si el estado de solicitud es 2 es porque el usuario esta bloqueado.
+        ConectarMySQL conexion = new ConectarMySQL();
+        PreparedStatement procedimiento = null;
+        ArrayList<UsuarioConsulta> listaAmigos = new ArrayList<>();
+        
+        try {
+            procedimiento = conexion.getInstance().prepareStatement("SELECT idusuario,nombres,apellidos,departamento,fechanacimiento FROM usuarios,solicitudes WHERE fk_recibesolicitud  = ? AND fk_enviasolicitud  = idusuario AND estado = ?");
+            procedimiento.setInt(1, identificacion.intValue());
+            procedimiento.setInt(2, 1);
+            procedimiento.execute();
+            ResultSet resultSet = procedimiento.getResultSet();
+            while(resultSet.next()){
+                listaAmigos.add(new UsuarioConsulta(resultSet.getInt(1),resultSet.getString(2), resultSet.getString(3),resultSet.getString(4), 0));
+            }
+            System.out.println("Se listo los amigos");
+        } catch (SQLException ex) {
+            Logger.getLogger(BD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        conexion.cerrarConexion();
+        if(listaAmigos.size()<=0){
+            listaAmigos = null;
+        }
+        
+        return listaAmigos;
+    }
+    
+    public static ArrayList<UsuarioConsulta> consultarSolicitudes(Integer identificacion){
+        ConectarMySQL conexion = new ConectarMySQL();
+        PreparedStatement procedimiento = null;
+        ArrayList<UsuarioConsulta> listaUsuario = new ArrayList<>();
+        
+        try {
+            procedimiento = conexion.getInstance().prepareStatement("SELECT idusuario,nombres,apellidos,departamento,fechanacimiento FROM solicitudes,usuarios WHERE fk_recibesolicitud = ? AND fk_enviasolicitud=idusuario AND estado = ?");
+            procedimiento.setInt(1, identificacion.intValue());
+            procedimiento.setInt(2,0);
+            procedimiento.execute();
+            ResultSet resultSet = procedimiento.getResultSet();
+            while(resultSet.next()){
+                listaUsuario.add(new UsuarioConsulta(resultSet.getInt(1),resultSet.getString(2), resultSet.getString(3),resultSet.getString(4), 0));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        conexion.cerrarConexion();
+        if(listaUsuario.size()<=0){
+            listaUsuario = null;
+        }
+        
+        return listaUsuario;
+    }
+    
+    public static void aceptarSolicitud(Solicitud solicitud){
+        ConectarMySQL conexion = new ConectarMySQL();
+        PreparedStatement procedimiento = null;
+        
+        System.out.println("recibe: "+solicitud.getRecibe()+" Envia: "+solicitud.getEnvia());
+        try {
+            procedimiento = conexion.getInstance().prepareStatement("UPDATE solicitudes SET estado = 1 WHERE fk_recibesolicitud = ? AND fk_enviasolicitud = ?");
+            procedimiento.setInt(1, solicitud.getEnvia());
+            procedimiento.setInt(2, solicitud.getRecibe());
+            procedimiento.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(BD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        conexion.cerrarConexion();
+    }
+    
+    public static void eliminarUsuario(Sesion sesion){
+        ConectarMySQL conexion = new ConectarMySQL();
+        PreparedStatement procedimiento1 = null,procedimiento2 = null,procedimiento3 = null,
+                            procedimiento4 = null,procedimiento5 = null, procedimiento6 = null;
+        
+        try {
+            procedimiento1 = conexion.getInstance().prepareStatement("DELETE FROM celulares WHERE fk_idusuario6 = ?");
+            procedimiento1.setInt(1, sesion.getIdUsuario());
+            procedimiento1.execute();
+            procedimiento2 = conexion.getInstance().prepareStatement("DELETE FROM telefonos WHERE idusuario_fk4 = ?");
+            procedimiento2.setInt(1, sesion.getIdUsuario());
+            procedimiento2.execute();
+            procedimiento3 = conexion.getInstance().prepareStatement("DELETE FROM  redessociales WHERE fk_usuario5 = ?");
+            procedimiento3.setInt(1, sesion.getIdUsuario());
+            procedimiento3.execute();
+            procedimiento4 = conexion.getInstance().prepareStatement("DELETE FROM solicitudes WHERE fk_enviasolicitud = ? OR fk_recibesolicitud = ?");
+            procedimiento4.setInt(1, sesion.getIdUsuario());
+            procedimiento4.setInt(2, sesion.getIdUsuario());
+            procedimiento4.execute();
+            procedimiento6 = conexion.getInstance().prepareStatement("DELETE FROM publicaciones WHERE idusuario_fk1 = ?");
+            procedimiento6.setInt(1, sesion.getIdUsuario());
+            procedimiento6.execute();
+            procedimiento5 = conexion.getInstance().prepareStatement("DELETE FROM usuarios WHERE idusuario = ?");
+            procedimiento5.setInt(1, sesion.getIdUsuario());
+            procedimiento5.execute();
+           
+        } catch (SQLException ex) {
+            Logger.getLogger(BD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        conexion.cerrarConexion();
     }
 }
