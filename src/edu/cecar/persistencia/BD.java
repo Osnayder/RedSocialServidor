@@ -4,6 +4,7 @@ import edu.cecar.componentes.ConectarMySQL;
 import edu.cecar.modelo.Publicacion;
 import edu.cecar.modelo.Red;
 import edu.cecar.modelo.Sesion;
+import edu.cecar.modelo.Solicitud;
 import edu.cecar.modelo.Usuario;
 import edu.cecar.modelo.UsuarioConsulta;
 import java.sql.CallableStatement;
@@ -266,13 +267,19 @@ public class BD {
         return listaPublicaciones;
     }  
     
-    public static void agregarSolicitud(String codigo){
+    public static void agregarSolicitud(Solicitud solicitud){
         ConectarMySQL conexion          = new ConectarMySQL();
         PreparedStatement procedimiento = null;
         
+        System.out.println("Se va a registrar con la sesion de "+solicitud.getEnvia() +" y se le envia a "+solicitud.getRecibe());
+        
         try {
             procedimiento = conexion.getInstance().prepareStatement("INSERT INTO solicitudes VALUES(?,?,?,?)");
-            
+            procedimiento.setInt(1,solicitud.getRecibe());
+            procedimiento.setDate(2,solicitud.getFecha());
+            procedimiento.setInt(3, solicitud.getEstado());
+            procedimiento.setInt(4, solicitud.getEnvia());
+            procedimiento.execute();
         } catch (SQLException ex) {
             Logger.getLogger(BD.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -284,6 +291,7 @@ public class BD {
         PreparedStatement procedimiento = null;
         
         ArrayList<UsuarioConsulta> listaUsuario = new ArrayList<>();
+        boolean control = false;
         
         String codigo = "";
         String criterioX0 = "";
@@ -337,8 +345,10 @@ public class BD {
             default:
                 break;
         }
-        
-        System.out.println("Se hizo la busqueda de usuarios para hacer amigo");
+        conexion.cerrarConexion();
+        if(listaUsuario.size()<=0){
+            listaUsuario = null;
+        }
         return listaUsuario;
     }
 }

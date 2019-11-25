@@ -4,6 +4,7 @@ import edu.cecar.componentes.comunicaciones.ServerSocketObjeto;
 import edu.cecar.modelo.Archivo;
 import edu.cecar.modelo.Publicacion;
 import edu.cecar.modelo.Sesion;
+import edu.cecar.modelo.Solicitud;
 import edu.cecar.modelo.Usuario;
 import edu.cecar.modelo.UsuarioConsulta;
 import edu.cecar.persistencia.BD;
@@ -116,14 +117,13 @@ public class ServidorRESOC {
                 ArrayList<UsuarioConsulta> listaUsuaario12 =  BD.consultarUsuarioB1(valorBusqueda);
                         try {
                             serverSocket.getSalida().writeObject(listaUsuaario12);
-                            System.out.println("Se envio ");
                         } catch (IOException ex) {
-                            System.out.println("Error ==**");
                             Logger.getLogger(ServidorRESOC.class.getName()).log(Level.SEVERE, null, ex);
                         }   
                 break;
             case 7:
-                String valorBusquedaUsuario = (String)archivoRecibido.getObjecto();
+                Solicitud valorBusquedaString = (Solicitud)archivoRecibido.getObjecto();
+                BD.agregarSolicitud(valorBusquedaString);
                 break;
         }
     }
